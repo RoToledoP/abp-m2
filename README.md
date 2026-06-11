@@ -23,4 +23,4 @@ Este proyecto permite a los usuarios iniciar sesión, consultar su saldo, realiz
 ## Contacto y autor
 
 - Autor: Rodrigo Toledo
-- Contacto: Puedes contactarme a través de mi perfil de GitHub o el medio que prefieras.
+- rotoledop.github.io/abp-m2/
