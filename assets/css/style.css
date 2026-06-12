@@ -12,16 +12,86 @@
 }
 
 /* Encabezados responsivos para páginas principales */
+header {
+    background: linear-gradient(180deg, rgba(111, 105, 230, 0.14), rgba(111, 105, 230, 0.03));
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
 header h1 {
     font-size: clamp(2rem, 4.5vw, 3rem);
-    line-height: 1.15;
+    line-height: 1.1;
     word-break: keep-all;
     overflow-wrap: break-word;
     hyphens: none;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+    color: rgba(83, 76, 219, 1);
+    letter-spacing: 0.01em;
+}
+
+header h1.text-primary {
+    color: rgba(31, 32, 65, 1);
+}
+
+header h3 {
+    color: #495057;
+    font-weight: 500;
+}
+
+main {
+    background: #ffffff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(111, 105, 230, 0.08);
+    margin-bottom: 2rem;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, rgba(111, 105, 230, 1), rgba(111, 105, 230, 0.9));
+    border: 1px solid rgba(111, 105, 230, 1);
+    color: #ffffff;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: linear-gradient(180deg, rgba(111, 105, 230, 1), rgba(111, 105, 230, 0.85));
+    border-color: rgba(111, 105, 230, 1);
+    transform: translateY(-1px);
+}
+
+.form-control {
+    border-color: rgba(111, 105, 230, 0.25);
+}
+
+.form-control:focus {
+    border-color: rgba(111, 105, 230, 1);
+    box-shadow: 0 0 0 0.2rem rgba(111, 105, 230, 0.12);
+}
+
+.form-label {
+    color: rgba(111, 105, 230, 1);
+    font-weight: 600;
+}
+
+.list-group-item {
+    border-color: rgba(111, 105, 230, 0.12);
+}
+
+.list-group-item:hover {
+    background: rgba(111, 105, 230, 0.04);
+}
+
+h2 {
+    color: rgba(111, 105, 230, 1);
 }
 
 @media (max-width: 576px) {
+    header {
+        padding: 1.5rem 1rem;
+    }
+
     header h1 {
         font-size: clamp(1.75rem, 7vw, 2.25rem);
     }
