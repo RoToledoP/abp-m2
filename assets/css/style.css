@@ -8,6 +8,23 @@
 /* Quitar flechas en Firefox */
 .sin-flechas {
     -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Encabezados responsivos para páginas principales */
+header h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.15;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    hyphens: none;
+    margin-bottom: 0.75rem;
+}
+
+@media (max-width: 576px) {
+    header h1 {
+        font-size: clamp(1.75rem, 7vw, 2.25rem);
+    }
 }
 
 /* Estilos para el carrusel de la página de inicio */
@@ -24,4 +41,50 @@
 #homepageCarousel .carousel-caption p {
     color: #0d6efd;
     font-size: 1.1rem;
+}
+
+#homepageCarousel .carousel-control-prev,
+#homepageCarousel .carousel-control-next {
+    width: 3rem;
+    height: 3rem;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    opacity: 1;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+#homepageCarousel .carousel-control-prev-icon,
+#homepageCarousel .carousel-control-next-icon {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+}
+
+#homepageCarousel .carousel-control-prev:hover,
+#homepageCarousel .carousel-control-next:hover {
+    background-color: transparent;
+}
+
+#homepageCarousel .carousel-control-prev:hover .carousel-control-prev-icon,
+#homepageCarousel .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+/* Autocomplete personalizado en sendmoney */
+#autocompleteList {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 0.25rem;
+}
+
+#autocompleteList .autocomplete-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

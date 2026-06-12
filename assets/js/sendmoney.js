@@ -26,6 +26,39 @@ const contactos = [
     },
 ];
 
+//FUNCIÓN QUE ACTUALIZA LAS SUGERENCIAS DEL AUTOCOMPLETE
+function actualizarAutocomplete(listaContactos) {
+    const $list = $("#autocompleteList");
+    const valor = $("#buscarContacto").val().trim().toLowerCase();
+    $list.empty();
+
+    if (!valor || listaContactos.length === 0) {
+        $list.addClass("d-none");
+        return;
+    }
+
+    const encontrados = listaContactos.filter(function (contacto) {
+        const nombre = contacto.nombre.toLowerCase();
+        const alias = contacto.alias.toLowerCase();
+        return nombre.includes(valor) || alias.includes(valor) || contacto.cbu.includes(valor) || contacto.banco.toLowerCase().includes(valor);
+    });
+
+    if (encontrados.length === 0) {
+        $list.addClass("d-none");
+        return;
+    }
+
+    encontrados.forEach(function (contacto) {
+        const label = `${contacto.nombre} (${contacto.alias})`;
+        const $item = $('<button type="button" class="list-group-item list-group-item-action autocomplete-item"></button>');
+        $item.text(label);
+        $item.data('value', contacto.nombre);
+        $list.append($item);
+    });
+
+    $list.removeClass("d-none");
+}
+
 //FUNCIÓN QUE SE VA A ENCARGAR DE CARGAR LOS CONTACTOS EN LA UL DEL DOM
 function cargarContactos(listaContactos){
 
@@ -55,6 +88,7 @@ function cargarContactos(listaContactos){
 
 function main(){
     cargarContactos(contactos);
+    actualizarAutocomplete(contactos);
 };
 
 main();
@@ -65,38 +99,44 @@ const buscarContactoEl = document.getElementById("buscarContacto");
 
 //AGREGAMOS EL EVENTO INPUT AL ELEMENTO
 
-buscarContactoEl.addEventListener("input", function(event){
-    event.preventDefault();
+buscarContactoEl.addEventListener("input", function(){
+    const textoBusqueda = buscarContactoEl.value.trim().toLowerCase();
 
-    let textoBusqueda = buscarContactoEl.value;
+    const contactosFiltrados = contactos.filter(function(contacto){
+        const nombre = contacto.nombre.toLowerCase();
+        const alias = contacto.alias.toLowerCase();
+        const banco = contacto.banco.toLowerCase();
+        const cbu = contacto.cbu;
 
-    //DEJAMO EL TEXTO EL INPUT EN MINÚSCULAS
-    textoBusqueda = textoBusqueda.toLowerCase();
-
-    //FILTRAR LOS CONTACTOS QUE COINCIDAN POR EL TEXTO BUSCADO
-
-    let contactosFiltrados = contactos.filter(function(contacto){
-        //DESECTRUCTURAR LAS PROPIEDADES DEL OBJETO
-        let {nombre, cbu, alias, banco } = contacto;
-
-        nombre = nombre.toLowerCase();
-        alias = alias.toLowerCase();
-        banco = banco.toLowerCase();
-
-        let reglaNombre = nombre.includes(textoBusqueda);
-        let reglaAlias = alias.includes(textoBusqueda);
-        let reglaCbu = cbu.includes(textoBusqueda);
-        let reglaBanco = banco.includes(textoBusqueda);
-
-        if(reglaNombre || reglaAlias || reglaCbu || reglaBanco){
-            return contacto;
-        }else{
-            return false;
-        }
+        return (
+            nombre.includes(textoBusqueda) ||
+            alias.includes(textoBusqueda) ||
+            banco.includes(textoBusqueda) ||
+            cbu.includes(textoBusqueda)
+        );
     });
 
-    //UNA VEZ FILTRADOS LOS CONTACTOS LOS ENVIAMOS A LA FUNCIÓN DE CARGAR CONTACTOS
     cargarContactos(contactosFiltrados);
+    actualizarAutocomplete(contactosFiltrados);
+});
+
+$(document).on('click', '#autocompleteList .autocomplete-item', function () {
+    const value = $(this).data('value');
+    $('#buscarContacto').val(value);
+    $('#autocompleteList').addClass('d-none');
+    buscarContactoEl.dispatchEvent(new Event('input'));
+});
+
+$(document).on('click', function (event) {
+    if (!$(event.target).closest('#buscarContacto, #autocompleteList').length) {
+        $('#autocompleteList').addClass('d-none');
+    }
+});
+
+$(document).on('keydown', '#buscarContacto', function (event) {
+    if (event.key === 'Escape') {
+        $('#autocompleteList').addClass('d-none');
+    }
 });
 
 //LÓGICA DE ENVIAR DINERO A UN USUARIO SELECCIONADO
@@ -181,6 +221,7 @@ formNuevoContactoEl.addEventListener("submit", function(event){
 
     //ACTUALIZAMOS LA LISTA DE CONTACTOS EN EL DOM
     cargarContactos(contactos);
+    actualizarDatalist(contactos);
 
     //LIMPIAMOS EL FORMULARIO
     formNuevoContactoEl.reset();

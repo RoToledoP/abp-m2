@@ -57,10 +57,11 @@
                 <div class="col-12 col-sm-9 col-lg-7">
 
                     <form id="formSendMoney">
-                        <div class="mb-3">
+                        <div class="mb-3 position-relative">
                             <label for="buscarContacto" class="form-label">Buscar en la agenda de
                                 contactos:</label>
-                            <input type="text" class="form-control" id="buscarContacto" placeholder="Ingresar nombre de contacto">
+                            <input type="text" class="form-control" id="buscarContacto" placeholder="Ingresar nombre de contacto" autocomplete="off">
+                            <div id="autocompleteList" class="list-group position-absolute w-100 shadow-sm d-none" style="z-index: 10;"></div>
                         </div>
                         <div class="mb-3">
                             <button type="button" class="btn btn-primary" id="btnAgregarContacto" data-bs-toggle="modal" data-bs-target="#modalNuevoContacto">Agregar nuevo contacto</button>
@@ -95,6 +96,7 @@
 
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- MODAL AGREGAR NUEVO CONTACTO -->
     <div class="modal fade" id="modalNuevoContacto" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog">

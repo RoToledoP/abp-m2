@@ -1,0 +1,134 @@
+warning: in the working copy of 'assets/js/sendmoney.js', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/assets/js/sendmoney.js b/assets/js/sendmoney.js[m
+[1mindex 6f90258..702e48b 100644[m
+[1m--- a/assets/js/sendmoney.js[m
+[1m+++ b/assets/js/sendmoney.js[m
+[36m@@ -26,6 +26,39 @@[m [mconst contactos = [[m
+     },[m
+ ];[m
+ [m
+[32m+[m[32m//FUNCIÓN QUE ACTUALIZA LAS SUGERENCIAS DEL AUTOCOMPLETE[m
+[32m+[m[32mfunction actualizarAutocomplete(listaContactos) {[m
+[32m+[m[32m    const $list = $("#autocompleteList");[m
+[32m+[m[32m    const valor = $("#buscarContacto").val().trim().toLowerCase();[m
+[32m+[m[32m    $list.empty();[m
+[32m+[m
+[32m+[m[32m    if (!valor || listaContactos.length === 0) {[m
+[32m+[m[32m        $list.addClass("d-none");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    const encontrados = listaContactos.filter(function (contacto) {[m
+[32m+[m[32m        const nombre = contacto.nombre.toLowerCase();[m
+[32m+[m[32m        const alias = contacto.alias.toLowerCase();[m
+[32m+[m[32m        return nombre.includes(valor) || alias.includes(valor) || contacto.cbu.includes(valor) || contacto.banco.toLowerCase().includes(valor);[m
+[32m+[m[32m    });[m
+[32m+[m
+[32m+[m[32m    if (encontrados.length === 0) {[m
+[32m+[m[32m        $list.addClass("d-none");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    encontrados.forEach(function (contacto) {[m
+[32m+[m[32m        const label = `${contacto.nombre} (${contacto.alias})`;[m
+[32m+[m[32m        const $item = $('<button type="button" class="list-group-item list-group-item-action autocomplete-item"></button>');[m
+[32m+[m[32m        $item.text(label);[m
+[32m+[m[32m        $item.data('value', contacto.nombre);[m
+[32m+[m[32m        $list.append($item);[m
+[32m+[m[32m    });[m
+[32m+[m
+[32m+[m[32m    $list.removeClass("d-none");[m
+[32m+[m[32m}[m
+[32m+[m
+ //FUNCIÓN QUE SE VA A ENCARGAR DE CARGAR LOS CONTACTOS EN LA UL DEL DOM[m
+ function cargarContactos(listaContactos){[m
+ [m
+[36m@@ -55,6 +88,7 @@[m [mfunction cargarContactos(listaContactos){[m
+ [m
+ function main(){[m
+     cargarContactos(contactos);[m
+[32m+[m[32m    actualizarAutocomplete(contactos);[m
+ };[m
+ [m
+ main();[m
+[36m@@ -65,38 +99,44 @@[m [mconst buscarContactoEl = document.getElementById("buscarContacto");[m
+ [m
+ //AGREGAMOS EL EVENTO INPUT AL ELEMENTO[m
+ [m
+[31m-buscarContactoEl.addEventListener("input", function(event){[m
+[31m-    event.preventDefault();[m
+[31m-[m
+[31m-    let textoBusqueda = buscarContactoEl.value;[m
+[32m+[m[32mbuscarContactoEl.addEventListener("input", function(){[m
+[32m+[m[32m    const textoBusqueda = buscarContactoEl.value.trim().toLowerCase();[m
+[32m+[m
+[32m+[m[32m    const contactosFiltrados = contactos.filter(function(contacto){[m
+[32m+[m[32m        const nombre = contacto.nombre.toLowerCase();[m
+[32m+[m[32m        const alias = contacto.alias.toLowerCase();[m
+[32m+[m[32m        const banco = contacto.banco.toLowerCase();[m
+[32m+[m[32m        const cbu = contacto.cbu;[m
+[32m+[m
+[32m+[m[32m        return ([m
+[32m+[m[32m            nombre.includes(textoBusqueda) ||[m
+[32m+[m[32m            alias.includes(textoBusqueda) ||[m
+[32m+[m[32m            banco.includes(textoBusqueda) ||[m
+[32m+[m[32m            cbu.includes(textoBusqueda)[m
+[32m+[m[32m        );[m
+[32m+[m[32m    });[m
+ [m
+[31m-    //DEJAMO EL TEXTO EL INPUT EN MINÚSCULAS[m
+[31m-    textoBusqueda = textoBusqueda.toLowerCase();[m
+[32m+[m[32m    cargarContactos(contactosFiltrados);[m
+[32m+[m[32m    actualizarAutocomplete(contactosFiltrados);[m
+[32m+[m[32m});[m
+ [m
+[31m-    //FILTRAR LOS CONTACTOS QUE COINCIDAN POR EL TEXTO BUSCADO[m
+[32m+[m[32m$(document).on('click', '#autocompleteList .autocomplete-item', function () {[m
+[32m+[m[32m    const value = $(this).data('value');[m
+[32m+[m[32m    $('#buscarContacto').val(value);[m
+[32m+[m[32m    $('#autocompleteList').addClass('d-none');[m
+[32m+[m[32m    buscarContactoEl.dispatchEvent(new Event('input'));[m
+[32m+[m[32m});[m
+ [m
+[31m-    let contactosFiltrados = contactos.filter(function(contacto){[m
+[31m-        //DESECTRUCTURAR LAS PROPIEDADES DEL OBJETO[m
+[31m-        let {nombre, cbu, alias, banco } = contacto;[m
+[31m-[m
+[31m-        nombre = nombre.toLowerCase();[m
+[31m-        alias = alias.toLowerCase();[m
+[31m-        banco = banco.toLowerCase();[m
+[31m-[m
+[31m-        let reglaNombre = nombre.includes(textoBusqueda);[m
+[31m-        let reglaAlias = alias.includes(textoBusqueda);[m
+[31m-        let reglaCbu = cbu.includes(textoBusqueda);[m
+[31m-        let reglaBanco = banco.includes(textoBusqueda);[m
+[31m-[m
+[31m-        if(reglaNombre || reglaAlias || reglaCbu || reglaBanco){[m
+[31m-            return contacto;[m
+[31m-        }else{[m
+[31m-            return false;[m
+[31m-        }[m
+[31m-    });[m
+[32m+[m[32m$(document).on('click', function (event) {[m
+[32m+[m[32m    if (!$(event.target).closest('#buscarContacto, #autocompleteList').length) {[m
+[32m+[m[32m        $('#autocompleteList').addClass('d-none');[m
+[32m+[m[32m    }[m
+[32m+[m[32m});[m
+ [m
+[31m-    //UNA VEZ FILTRADOS LOS CONTACTOS LOS ENVIAMOS A LA FUNCIÓN DE CARGAR CONTACTOS[m
+[31m-    cargarContactos(contactosFiltrados);[m
+[32m+[m[32m$(document).on('keydown', '#buscarContacto', function (event) {[m
+[32m+[m[32m    if (event.key === 'Escape') {[m
+[32m+[m[32m        $('#autocompleteList').addClass('d-none');[m
+[32m+[m[32m    }[m
+ });[m
+ [m
+ //LÓGICA DE ENVIAR DINERO A UN USUARIO SELECCIONADO[m
+[36m@@ -181,6 +221,7 @@[m [mformNuevoContactoEl.addEventListener("submit", function(event){[m
+ [m
+     //ACTUALIZAMOS LA LISTA DE CONTACTOS EN EL DOM[m
+     cargarContactos(contactos);[m
+[32m+[m[32m    actualizarDatalist(contactos);[m
+ [m
+     //LIMPIAMOS EL FORMULARIO[m
+     formNuevoContactoEl.reset();[m
